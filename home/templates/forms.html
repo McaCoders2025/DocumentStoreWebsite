@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block start %}
+<h1>WELCOME! Please enter student details</h1>
+<a href="{% url 'firstpage' %}" class="btn">Back to Home</a>
+
+<style>
+	body {
+		font-family: Arial, sans-serif;
+		background-color: #f9f9f9;
+		margin: 0;
+		padding: 20px;
+	}
+
+	h1 {
+		text-align: center;
+		color: #333;
+		margin-bottom: 30px;
+	}
+
+	.btn {
+		display: inline-block;
+		padding: 10px 20px;
+		background-color: #007BFF;
+		color: white;
+		text-decoration: none;
+		border-radius: 5px;
+		margin-bottom: 20px;
+		text-align: center;
+		font-size: 16px;
+		transition: background-color 0.3s ease;
+	}
+
+	.btn:hover {
+		background-color: #0056b3;
+	}
+
+	form {
+		background-color: white;
+		padding: 30px;
+		border-radius: 10px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		width: 400px;
+		margin: 0 auto;
+	}
+
+	form input[type="submit"] {
+		background-color: #4CAF50;
+		color: white;
+		padding: 10px 20px;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		font-size: 16px;
+		width: 100%;
+		transition: background-color 0.3s ease;
+	}
+
+	form input[type="submit"]:hover {
+		background-color: #45a049;
+	}
+
+	form p {
+		font-size: 16px;
+		color: #333;
+	}
+</style>
+
+<a href="{% url 'firstpage' %}" class="btn">Back to Home</a>
+
+<form action="{% url 'detail' %}" method="post">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<input type="submit" value="Submit">
+</form>
+
+{% endblock %}

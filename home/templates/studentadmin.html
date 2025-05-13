@@ -1,0 +1,8 @@
+
+{% extends "base.html"%}
+{% block start %}
+{% if perms.home.can_view_studentlist %}
+      <!-- Code to display student list -->
+{% endif %}
+{% endblock %}
+

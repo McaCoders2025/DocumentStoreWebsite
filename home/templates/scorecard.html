@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block start %}
+<h2>Scorecard</h2>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 30px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+
+    th,
+    td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        font-size: 16px;
+    }
+
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .percentage {
+        font-weight: bold;
+        color: #4CAF50;
+    }
+
+    .total {
+        font-weight: bold;
+        color: #007BFF;
+    }
+
+    .maxmarks {
+        font-weight: bold;
+        color: #FF6347;
+    }
+
+    .download-btn {
+        display: inline-block;
+        margin: 20px auto;
+        padding: 10px 20px;
+        background-color: #007BFF;
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+        border-radius: 5px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease;
+    }
+
+    .download-btn:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<table>
+    <thead>
+        <tr>
+            <th>Roll Number</th>
+            <th>Name</th>
+            <th>Physics</th>
+            <th>Chemistry</th>
+            <th>Maths</th>
+            <th>English</th>
+            <th>Total Marks</th>
+            <th>Max. Marks</th>
+            <th>Percentage</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ student.rollnumber }}</td>
+            <td>{{ student.name }}</td>
+            <td>{{ student.physics }}</td>
+            <td>{{ student.chemistry }}</td>
+            <td>{{ student.maths }}</td>
+            <td>{{ student.english }}</td>
+            <td class="total">{{ student.totalmarks }}</td>
+            <td class="maxmarks">{{ student.maxmarks }}</td>
+            <td class="percentage">{{ student.percentage }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<a href="{% url 'download_marksheet' student.rollnumber %}" class="download-btn">Download Marksheet</a>
+<a href="{% url 'send-email' %}" class="download-btn">Send Email</a>
+
+
+
+{% endblock %}

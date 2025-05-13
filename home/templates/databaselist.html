@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block start %}
+<h2>Students List</h2>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f8f8;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    th,
+    td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        font-size: 16px;
+    }
+
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #007BFF;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 14px;
+        text-align: center;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    .empty-message {
+        text-align: center;
+        padding: 20px;
+        color: #999;
+        font-size: 16px;
+    }
+</style>
+
+<table>
+    <thead>
+        <tr>
+            <th>Roll Number</th>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Action</th>
+            <th>Scorecard</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for entry in students %}
+        <tr>
+            <td>{{ entry.rollnumber }}</td>
+            <td>{{ entry.name }}</td>
+            <td>{{ entry.date }}</td>
+            <td>
+                <a href="{% url 'student_info' entry.id %}" class="btn">Details</a>
+            </td>
+            <td>
+                <a href="{% url 'student_score' entry.id %}" class="btn">Marks</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="empty-message">No entries found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

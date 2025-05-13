@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block start %}
+
+<head>
+    <title>Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 40px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            margin: 0 auto;
+        }
+
+        label {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .messages {
+            color: red;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Register</h2>
+
+    {% if messages %}
+    <div class="messages">
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label for="email">Email:</label>
+        <input type="email" name="emailaddress" required>
+
+        <label for="password">Password:</label>
+        <input type="password" name="password" required>
+
+        <label for="confirmpassword">Confirm Password:</label>
+        <input type="password" name="confirmpassword" required>
+
+        <label for="group">Select Group:</label>
+        <select name="group" required>
+            <option value="" disabled selected>Select your group</option>
+            <option value="Admin">Admin</option>
+            <option value="Acadmission">Acadmission</option>
+            <option value="Students">Students</option>
+        </select>
+
+        <button type="submit">Register</button>
+    </form>
+</body>
+
+{% endblock %}
