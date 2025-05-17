@@ -1,7 +1,9 @@
-Django>=4.2
+Django>=3.2,<5.0
 pytz
 sqlparse
 asgiref
 pandas
 numpy
 Pillow
+gunicorn
+dj-database-url
