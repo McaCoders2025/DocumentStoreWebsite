@@ -1,1 +1,1 @@
-web: gunicorn DocumentStoreWebsite.wsgi
+web: gunicorn core.wsgi
