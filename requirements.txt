@@ -8,3 +8,4 @@ Pillow
 gunicorn
 dj-database-url
 whitenoise
+reportlab
