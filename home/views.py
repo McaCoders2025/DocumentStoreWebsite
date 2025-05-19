@@ -194,41 +194,42 @@ def register(request):
 #     )
 #     return redirect('landing-page')
 
-from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
+from django.shortcuts import render, redirect
+from django.core.mail import EmailMessage
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+import os
 
+@login_required
 def send_email_to_student(request):
-    # File path to the marksheet or dynamically generate the file
-    file_path = 'marksheet_21.pdf'
-  # Replace with the actual file path
-    pk = request.user.id
-    student = User.objects.get(id=pk)
-    context = {'student': student}
+    if request.method == "POST":
+        recipient_email = request.POST.get('email')
 
-    # Render the HTML content for the email
-    # html_content = render_to_string('scorecard.html', {'student': {'name': 'John Doe', 'marks': 90}})
+        file_path = 'marksheet_21.pdf'
+        if not os.path.exists(file_path):
+            return HttpResponse("Marksheet file not found.", status=404)
 
-    # Create the email
-    email = EmailMessage(
-        subject="Student Marksheet",
-        body="Please find the attached marksheet.",
-        from_email=settings.EMAIL_HOST_USER,
-        to=["sonishubham362409@gmail.com"],  # Recipient list
-        # to=[student.email],  # Recipient list
-        
-    )
+        try:
+            email = EmailMessage(
+                subject="Student Marksheet",
+                body="Please find the attached marksheet.",
+                from_email=settings.EMAIL_HOST_USER,
+                to=[recipient_email],
+            )
+            email.attach_file(file_path)
+            email.content_subtype = "html"
+            email.send()
 
-    # Attach the file
-    email.attach_file(file_path)
+            # ✅ Redirect to landing page after success
+            return redirect('landing-page')
 
-    # Specify that the body is HTML
-    email.content_subtype = "html"
+        except Exception as e:
+            return HttpResponse(f"Failed to send email: {str(e)}", status=500)
 
-    # Send the email
-    email.send()
-
-    return redirect('landing-page')
-
+    # On GET, render the form
+    return render(request, 'send_email_form.html')
 
 
 def download_marksheet(request, rollnumber):
