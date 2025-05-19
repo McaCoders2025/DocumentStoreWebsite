@@ -1,0 +1,92 @@
+<!--<form method="POST" action="{% url 'send-email' %}">
+    {% csrf_token %}
+    <label for="email">Enter email to send marksheet:</label><br>
+    <input type="email" name="email" required>
+    <button type="submit">Send Marksheet</button>
+</form>-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Send Marksheet via Email</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            text-align: left;
+        }
+
+        input[type="email"] {
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .footer-note {
+            margin-top: 15px;
+            font-size: 13px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Send Marksheet</h2>
+    <form method="POST" action="{% url 'send-email' %}">
+        {% csrf_token %}
+        <label for="email">Recipient Email</label>
+        <input type="email" name="email" placeholder="example@email.com" required>
+        <button type="submit">Send</button>
+    </form>
+    <div class="footer-note">
+        PDF will be sent as an attachment.
+    </div>
+</div>
+
+</body>
+</html>
