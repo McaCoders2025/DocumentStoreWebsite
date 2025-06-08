@@ -1,82 +1,133 @@
 {% extends "base.html" %}
 
 {% block start %}
-<h2>Scorecard</h2>
+<h2 class="page-title">📄 Scorecard</h2>
 
 <style>
     body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #faf7ff;
         margin: 0;
-        padding: 20px;
+        padding: 30px 20px;
     }
 
-    h2 {
+    .page-title {
         text-align: center;
-        color: #333;
+        color: #4b4453;
         margin-bottom: 30px;
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
     }
 
     table {
         width: 100%;
         border-collapse: collapse;
-        background-color: white;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+        border-radius: 12px;
+        overflow: hidden;
+        animation: fadeIn 0.5s ease-in-out;
         margin-top: 20px;
     }
 
-    th,
-    td {
-        padding: 12px;
+    th, td {
+        padding: 14px 18px;
         text-align: left;
-        border-bottom: 1px solid #ddd;
         font-size: 16px;
+        border-bottom: 1px solid #eee;
     }
 
     th {
-        background-color: #4CAF50;
+        background-color: #6c5ce7;
         color: white;
+        font-weight: 600;
     }
 
     tr:nth-child(even) {
-        background-color: #f9f9f9;
+        background-color: #f9f5ff;
     }
 
     tr:hover {
-        background-color: #f1f1f1;
-    }
-
-    .percentage {
-        font-weight: bold;
-        color: #4CAF50;
+        background-color: #f3e8ff;
     }
 
     .total {
         font-weight: bold;
-        color: #007BFF;
+        color: #4c6ef5;
     }
 
     .maxmarks {
         font-weight: bold;
-        color: #FF6347;
+        color: #ff4d4d;
+    }
+
+    .percentage {
+        font-weight: bold;
+        color: #00b894;
     }
 
     .download-btn {
         display: inline-block;
-        margin: 20px auto;
+        margin: 20px 10px 0 10px;
         padding: 10px 20px;
-        background-color: #007BFF;
+        background: linear-gradient(to right, #4c6ef5, #5f27cd);
         color: white;
         text-decoration: none;
-        font-size: 16px;
-        border-radius: 5px;
+        font-size: 15px;
+        border-radius: 8px;
         text-align: center;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: background-color 0.3s ease;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
     }
 
     .download-btn:hover {
-        background-color: #0056b3;
+        background: #364fc7;
+        transform: scale(1.03);
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        table, thead, tbody, th, td, tr {
+            display: block;
+        }
+
+        thead {
+            display: none;
+        }
+
+        tr {
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        td {
+            position: relative;
+            padding: 12px;
+            font-size: 15px;
+        }
+
+        td::before {
+            content: attr(data-label);
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            font-weight: bold;
+            color: #4b4453;
+        }
     }
 </style>
 
@@ -96,23 +147,22 @@
     </thead>
     <tbody>
         <tr>
-            <td>{{ student.rollnumber }}</td>
-            <td>{{ student.name }}</td>
-            <td>{{ student.physics }}</td>
-            <td>{{ student.chemistry }}</td>
-            <td>{{ student.maths }}</td>
-            <td>{{ student.english }}</td>
-            <td class="total">{{ student.totalmarks }}</td>
-            <td class="maxmarks">{{ student.maxmarks }}</td>
-            <td class="percentage">{{ student.percentage }}</td>
+            <td data-label="Roll Number">{{ student.rollnumber }}</td>
+            <td data-label="Name">{{ student.name }}</td>
+            <td data-label="Physics">{{ student.physics }}</td>
+            <td data-label="Chemistry">{{ student.chemistry }}</td>
+            <td data-label="Maths">{{ student.maths }}</td>
+            <td data-label="English">{{ student.english }}</td>
+            <td data-label="Total" class="total">{{ student.totalmarks }}</td>
+            <td data-label="Max Marks" class="maxmarks">{{ student.maxmarks }}</td>
+            <td data-label="Percentage" class="percentage">{{ student.percentage }}</td>
         </tr>
     </tbody>
 </table>
 
-<a href="{% url 'download_marksheet' student.rollnumber %}" class="download-btn">Download Marksheet</a>
-<a href="{% url 'send_email_to_student' student.rollnumber %}" class="download-btn">Send Email</a>
-
-
-
+<div style="text-align: center;">
+    <a href="{% url 'download_marksheet' student.rollnumber %}" class="download-btn">⬇️ Download Marksheet</a>
+    <a href="{% url 'send_email_to_student' student.rollnumber %}" class="download-btn">✉️ Send Email</a>
+</div>
 
 {% endblock %}
