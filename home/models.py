@@ -42,7 +42,7 @@ class Student(models.Model):
     email = models.EmailField()
     address = models.TextField()
     date = models.DateTimeField(default=timezone.now)
-    rollnumber = models.IntegerField(default=0)
+    rollnumber = models.IntegerField(default=0, unique=True)
     physics = models.IntegerField(default=0)
     chemistry = models.IntegerField(default=0)
     maths = models.IntegerField(default=0)
