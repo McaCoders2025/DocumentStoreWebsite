@@ -9,3 +9,5 @@ gunicorn
 dj-database-url
 whitenoise
 reportlab
+PyPDF2
+openpyxl
