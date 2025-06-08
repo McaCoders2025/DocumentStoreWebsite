@@ -234,35 +234,188 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 import os
 
+from io import BytesIO
+from django.core.mail import EmailMessage
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from django.http import HttpResponse
+from .models import Student
+from django.conf import settings
+
+'''
 @login_required
 def send_email_to_student(request):
     if request.method == "POST":
         recipient_email = request.POST.get('email')
 
-        file_path = 'marksheet_21.pdf'
-        if not os.path.exists(file_path):
-            return HttpResponse("Marksheet file not found.", status=404)
+        # Get the student object by email
+        student = Student.objects.filter(email=recipient_email).first()
+        if not student:
+            return HttpResponse("Student not found.", status=404)
+
+        # Create PDF in memory
+        buffer = BytesIO()
+        p = canvas.Canvas(buffer, pagesize=letter)
+        width, height = letter
+
+        # Title
+        p.setFont("Helvetica-Bold", 16)
+        p.drawCentredString(width / 2, height - 50, f"Marksheet for {student.name} (Roll No: {student.rollnumber})")
+
+        # Header Row
+        p.setFont("Helvetica-Bold", 12)
+        table_start_y = height - 120
+        row_height = 20
+
+        headers = ["Subject", "Marks"]
+        x_positions = [100, 300]
+        for i, header in enumerate(headers):
+            p.drawString(x_positions[i], table_start_y, header)
+
+        # Student Scores
+        subjects = {
+            "Physics": student.physics,
+            "Chemistry": student.chemistry,
+            "Maths": student.maths,
+            "English": student.english,
+        }
+        p.setFont("Helvetica", 12)
+        for idx, (subject, marks) in enumerate(subjects.items()):
+            y = table_start_y - ((idx + 1) * row_height)
+            p.drawString(x_positions[0], y, subject)
+            p.drawString(x_positions[1], y, str(marks))
+
+        # Totals and Percentage
+        total_y = table_start_y - ((len(subjects) + 2) * row_height)
+        p.setFont("Helvetica-Bold", 12)
+        p.drawString(x_positions[0], total_y, "Total Marks:")
+        p.drawString(x_positions[1], total_y, str(student.totalmarks))
+
+        percentage_y = total_y - row_height
+        p.drawString(x_positions[0], percentage_y, "Percentage:")
+        p.drawString(x_positions[1], percentage_y, f"{student.percentage:.2f}%")
+
+        # Footer
+        footer_y = percentage_y - (2 * row_height)
+        p.setFont("Helvetica-Oblique", 10)
+        p.drawString(100, footer_y, "This is a system-generated marksheet.")
+
+        p.showPage()
+        p.save()
+
+        buffer.seek(0)  # Move to the beginning of the BytesIO buffer
+
+        # Create email
+        email = EmailMessage(
+            subject="Student Marksheet",
+            body="Please find the attached marksheet PDF.",
+            from_email=settings.EMAIL_HOST_USER,
+            to=[recipient_email],
+        )
+        email.attach(f"marksheet_{student.rollnumber}.pdf", buffer.getvalue(), 'application/pdf')
 
         try:
-            email = EmailMessage(
-                subject="Student Marksheet",
-                body="Please find the attached marksheet.",
-                from_email=settings.EMAIL_HOST_USER,
-                to=[recipient_email],
-            )
-            email.attach_file(file_path)
-            email.content_subtype = "html"
             email.send()
-
-            # ✅ Redirect to landing page after success
-            return redirect('landing-page')
-
+            return render(request, 'send_email_form.html', {'success': True, 'message': 'Email sent successfully.'})
         except Exception as e:
             return HttpResponse(f"Failed to send email: {str(e)}", status=500)
 
-    # On GET, render the form
+    # GET request - just render the form
     return render(request, 'send_email_form.html')
+'''
 
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
+from django.core.mail import EmailMessage
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+
+from io import BytesIO
+
+from .models import Student
+
+@login_required
+def send_email_to_student(request, rollnumber):
+    student = get_object_or_404(Student, rollnumber=rollnumber)
+
+    if request.method == "POST":
+        recipient_email = request.POST.get('email')
+        if not recipient_email:
+            return HttpResponse("Recipient email required.", status=400)
+
+        # Create PDF in memory
+        buffer = BytesIO()
+        p = canvas.Canvas(buffer, pagesize=letter)
+        width, height = letter
+
+        # Title
+        p.setFont("Helvetica-Bold", 16)
+        p.drawCentredString(width / 2, height - 50, f"Marksheet for {student.name} (Roll No: {student.rollnumber})")
+
+        # Header Row
+        p.setFont("Helvetica-Bold", 12)
+        table_start_y = height - 120
+        row_height = 20
+
+        headers = ["Subject", "Marks"]
+        x_positions = [100, 300]
+        for i, header in enumerate(headers):
+            p.drawString(x_positions[i], table_start_y, header)
+
+        # Student Scores
+        subjects = {
+            "Physics": student.physics,
+            "Chemistry": student.chemistry,
+            "Maths": student.maths,
+            "English": student.english,
+        }
+        p.setFont("Helvetica", 12)
+        for idx, (subject, marks) in enumerate(subjects.items()):
+            y = table_start_y - ((idx + 1) * row_height)
+            p.drawString(x_positions[0], y, subject)
+            p.drawString(x_positions[1], y, str(marks))
+
+        # Totals and Percentage
+        total_y = table_start_y - ((len(subjects) + 2) * row_height)
+        p.setFont("Helvetica-Bold", 12)
+        p.drawString(x_positions[0], total_y, "Total Marks:")
+        p.drawString(x_positions[1], total_y, str(student.totalmarks))
+
+        percentage_y = total_y - row_height
+        p.drawString(x_positions[0], percentage_y, "Percentage:")
+        p.drawString(x_positions[1], percentage_y, f"{student.percentage:.2f}%")
+
+        # Footer
+        footer_y = percentage_y - (2 * row_height)
+        p.setFont("Helvetica-Oblique", 10)
+        p.drawString(100, footer_y, "This is a system-generated marksheet.")
+
+        p.showPage()
+        p.save()
+
+        buffer.seek(0)  # Move to the beginning of the BytesIO buffer
+
+        # Create email
+        email = EmailMessage(
+            subject="Student Marksheet",
+            body="Please find the attached marksheet PDF.",
+            from_email=settings.EMAIL_HOST_USER,
+            to=[recipient_email],
+        )
+        email.attach(f"marksheet_{student.rollnumber}.pdf", buffer.getvalue(), 'application/pdf')
+
+        try:
+            email.send()
+            return render(request, 'send_email_form.html', {
+                'success': True,
+                'message': 'Email sent successfully.',
+                'student': student,
+            })
+        except Exception as e:
+            return HttpResponse(f"Failed to send email: {str(e)}", status=500)
+
+    # GET request - render the email input form
+    return render(request, 'send_email_form.html', {'student': student})
 
 
 
@@ -326,6 +479,4 @@ def download_marksheet(request, rollnumber):
     p.save()
 
     return response
-
-
 
