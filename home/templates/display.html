@@ -1,68 +1,131 @@
 {% extends "base.html" %}
 
 {% block start %}
-<h2>Entry List</h2>
+<h2 class="page-title">Entry List</h2>
 
 <style>
     body {
-        font-family: Arial, sans-serif;
-        background-color: #f9f9f9;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #faf7ff;
         margin: 0;
-        padding: 20px;
+        padding: 30px 20px;
     }
 
-    h2 {
+    .page-title {
         text-align: center;
-        color: #333;
+        color: #4b4453;
+        margin-bottom: 30px;
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
     }
 
     table {
         width: 100%;
         border-collapse: collapse;
+        background-color: #fff;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+        border-radius: 12px;
+        overflow: hidden;
+        animation: fadeIn 0.5s ease-in-out;
         margin-top: 20px;
-        background-color: white;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    th,
-    td {
-        padding: 12px;
+    th, td {
+        padding: 14px 18px;
         text-align: left;
-        border-bottom: 1px solid #ddd;
         font-size: 16px;
+        border-bottom: 1px solid #eee;
+        color: #4b4453;
     }
 
     th {
-        background-color: #4CAF50;
+        background-color: #6c5ce7;
         color: white;
+        font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f5ff;
     }
 
     tr:hover {
-        background-color: #f1f1f1;
+        background-color: #f3e8ff;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .btn {
         display: inline-block;
+        margin: 20px auto 0 auto;
         padding: 10px 20px;
-        background-color: #007BFF;
+        background: linear-gradient(to right, #6c5ce7, #5f27cd);
         color: white;
         text-decoration: none;
-        border-radius: 5px;
-        margin-top: 20px;
-        text-align: center;
         font-size: 16px;
-        transition: background-color 0.3s ease;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        max-width: 200px;
+        font-weight: 600;
+        display: block;
     }
 
     .btn:hover {
-        background-color: #0056b3;
+        background: #4a3fb3;
+        transform: scale(1.03);
+    }
+
+    @media screen and (max-width: 768px) {
+        table, thead, tbody, th, td, tr {
+            display: block;
+        }
+
+        thead {
+            display: none;
+        }
+
+        tr {
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        td {
+            position: relative;
+            padding: 12px 12px 12px 140px;
+            font-size: 15px;
+            color: #4b4453;
+        }
+
+        td::before {
+            content: attr(data-label);
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            font-weight: 700;
+            color: #6c5ce7;
+            font-size: 14px;
+        }
     }
 </style>
 
 <table>
     <thead>
         <tr>
-            <th>Rollnumber</th>
+            <th>Roll Number</th>
             <th>Name</th>
             <th>Age</th>
             <th>Email</th>
@@ -71,11 +134,11 @@
     </thead>
     <tbody>
         <tr>
-            <td>{{ student.rollnumber }}</td>
-            <td>{{ student.name }}</td>
-            <td>{{ student.age }}</td>
-            <td>{{ student.email }}</td>
-            <td>{{ student.address }}</td>
+            <td data-label="Roll Number">{{ student.rollnumber }}</td>
+            <td data-label="Name">{{ student.name }}</td>
+            <td data-label="Age">{{ student.age }}</td>
+            <td data-label="Email">{{ student.email }}</td>
+            <td data-label="Address">{{ student.address }}</td>
         </tr>
     </tbody>
 </table>
