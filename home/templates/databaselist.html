@@ -1,68 +1,120 @@
 {% extends "base.html" %}
 
 {% block start %}
-<h2>Students List</h2>
+<h2 class="page-title">🎓 Students List</h2>
 
 <style>
     body {
-        font-family: Arial, sans-serif;
-        background-color: #f8f8f8;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #faf7ff;
         margin: 0;
-        padding: 20px;
+        padding: 40px 20px;
     }
 
-    h2 {
+    .page-title {
         text-align: center;
-        color: #333;
-        margin-bottom: 20px;
+        color: #4b4453;
+        margin-bottom: 40px;
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
     }
 
     table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 20px;
-        background-color: white;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+        border-radius: 14px;
+        overflow: hidden;
+        animation: fadeIn 0.6s ease-in-out;
     }
 
-    th,
-    td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-        font-size: 16px;
-    }
-
-    th {
-        background-color: #4CAF50;
+    thead {
+        background-color: #5e60ce;
         color: white;
     }
 
+    th, td {
+        padding: 16px 20px;
+        text-align: left;
+        font-size: 16px;
+        border-bottom: 1px solid #eee;
+    }
+
     tr:hover {
-        background-color: #f1f1f1;
+        background-color: #f3e8ff;
     }
 
     .btn {
         display: inline-block;
-        padding: 8px 16px;
-        background-color: #007BFF;
+        padding: 8px 14px;
+        background-color: #6930c3;
         color: white;
-        text-decoration: none;
-        border-radius: 5px;
+        border-radius: 8px;
         font-size: 14px;
-        text-align: center;
-        transition: background-color 0.3s ease;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     .btn:hover {
-        background-color: #0056b3;
+        background-color: #512da8;
+        transform: scale(1.05);
     }
 
     .empty-message {
         text-align: center;
         padding: 20px;
-        color: #999;
+        color: #7f8c8d;
         font-size: 16px;
+        font-style: italic;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        table, thead, tbody, th, td, tr {
+            display: block;
+        }
+
+        thead {
+            display: none;
+        }
+
+        tr {
+            margin-bottom: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.05);
+            padding: 12px;
+        }
+
+        td {
+            padding: 10px 10px;
+            font-size: 15px;
+            border-bottom: none;
+            position: relative;
+        }
+
+        td::before {
+            content: attr(data-label);
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-weight: bold;
+            color: #4b4453;
+        }
     }
 </style>
 
@@ -79,13 +131,13 @@
     <tbody>
         {% for entry in students %}
         <tr>
-            <td>{{ entry.rollnumber }}</td>
-            <td>{{ entry.name }}</td>
-            <td>{{ entry.date }}</td>
-            <td>
+            <td data-label="Roll Number">{{ entry.rollnumber }}</td>
+            <td data-label="Name">{{ entry.name }}</td>
+            <td data-label="Date">{{ entry.date }}</td>
+            <td data-label="Action">
                 <a href="{% url 'student_info' entry.id %}" class="btn">Details</a>
             </td>
-            <td>
+            <td data-label="Scorecard">
                 <a href="{% url 'student_score' entry.id %}" class="btn">Marks</a>
             </td>
         </tr>
