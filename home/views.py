@@ -27,33 +27,65 @@ def landing_page(request):
     return render(request, "landingpage.html")
 
 
+from PyPDF2 import PdfReader
+import io
+
 def firstpage(request):
     if request.method == 'POST':
-        excel_file = request.FILES['excel']
-        df = pd.read_excel(excel_file)
+        uploaded_file = request.FILES.get('excel')
 
-        for index, row in df.iterrows():
-            data = row.to_dict()
+        if uploaded_file is None:
+            return HttpResponse("No file uploaded.", status=400)
 
-            student = Student(
-                name=data["name"],
-                age=random.randint(20, 25),
-                email=data["email"],
-                address="Thane",
-                # date=datetime.now(),
-                rollnumber=int(data["rollnumber"]),
-                physics=int(data["physics"]),
-                chemistry=int(data["chemistry"]),
-                maths=int(data["maths"]),
-                english=int(data["english"]),
-                totalmarks=int(data["Totalmarks"]),
-                maxmarks=int(data["Maxmarks"]),
-                percentage=int(data["Percentage"]),
-                user=request.user  # Associate with the user who uploaded the file
-            )
-            student.save()
+        file_name = uploaded_file.name.lower()
+
+        if file_name.endswith('.xlsx'):
+            try:
+                df = pd.read_excel(uploaded_file, engine='openpyxl')
+
+                for index, row in df.iterrows():
+                    data = row.to_dict()
+                    student = Student(
+                        name=data.get("name"),
+                        age=random.randint(20, 25),
+                        email=data.get("email"),
+                        address="Thane",
+                        rollnumber=int(data.get("rollnumber")),
+                        physics=int(data.get("physics")),
+                        chemistry=int(data.get("chemistry")),
+                        maths=int(data.get("maths")),
+                        english=int(data.get("english")),
+                        totalmarks=int(data.get("Totalmarks")),
+                        maxmarks=int(data.get("Maxmarks")),
+                        percentage=int(data.get("Percentage")),
+                        user=request.user
+                    )
+                    student.save()
+
+                messages.success(request, "Excel file processed successfully.")
+                return redirect("landing-page")
+
+            except Exception as e:
+                return HttpResponse(f"Error reading Excel file: {str(e)}", status=500)
+
+        elif file_name.endswith('.pdf'):
+            try:
+                reader = PdfReader(uploaded_file)
+                text = ""
+                for page in reader.pages:
+                    text += page.extract_text() or ""
+                
+                # For now, just return extracted text — adapt as needed
+                return HttpResponse(f"PDF content extracted:<br><pre>{text}</pre>")
+
+            except Exception as e:
+                return HttpResponse(f"Error reading PDF file: {str(e)}", status=500)
+
+        else:
+            return HttpResponse("Unsupported file format. Upload .xlsx or .pdf.", status=415)
 
     return redirect("landing-page")
+
 
 
 
@@ -232,6 +264,8 @@ def send_email_to_student(request):
     return render(request, 'send_email_form.html')
 
 
+
+
 def download_marksheet(request, rollnumber):
     # Replace with your model query to fetch the student object
     student = Student.objects.filter(rollnumber=rollnumber).first()  
@@ -292,4 +326,6 @@ def download_marksheet(request, rollnumber):
     p.save()
 
     return response
+
+
 
