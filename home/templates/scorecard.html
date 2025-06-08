@@ -110,7 +110,8 @@
 </table>
 
 <a href="{% url 'download_marksheet' student.rollnumber %}" class="download-btn">Download Marksheet</a>
-<a href="{% url 'send-email' %}" class="download-btn">Send Email</a>
+<a href="{% url 'send_email_to_student' student.rollnumber %}" class="download-btn">Send Email</a>
+
 
 
 
