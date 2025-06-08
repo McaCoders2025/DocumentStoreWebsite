@@ -1,77 +1,101 @@
 {% extends "base.html" %}
 
 {% block start %}
-<h1>WELCOME! Please enter student details</h1>
-<a href="{% url 'firstpage' %}" class="btn">Back to Home</a>
-
 <style>
-	body {
-		font-family: Arial, sans-serif;
-		background-color: #f9f9f9;
-		margin: 0;
-		padding: 20px;
-	}
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right, #8e2de2, #4a00e0);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 
-	h1 {
-		text-align: center;
-		color: #333;
-		margin-bottom: 30px;
-	}
+  h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  }
 
-	.btn {
-		display: inline-block;
-		padding: 10px 20px;
-		background-color: #007BFF;
-		color: white;
-		text-decoration: none;
-		border-radius: 5px;
-		margin-bottom: 20px;
-		text-align: center;
-		font-size: 16px;
-		transition: background-color 0.3s ease;
-	}
+  .btn {
+    background: linear-gradient(to right, #da22ff, #9733ee);
+    color: #fff;
+    padding: 12px 28px;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  }
 
-	.btn:hover {
-		background-color: #0056b3;
-	}
+  .btn:hover {
+    background: linear-gradient(to right, #9733ee, #da22ff);
+    transform: translateY(-2px);
+  }
 
-	form {
-		background-color: white;
-		padding: 30px;
-		border-radius: 10px;
-		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-		width: 400px;
-		margin: 0 auto;
-	}
+  form {
+    background-color: #ffffff;
+    padding: 35px;
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 450px;
+    color: #333;
+  }
 
-	form input[type="submit"] {
-		background-color: #4CAF50;
-		color: white;
-		padding: 10px 20px;
-		border: none;
-		border-radius: 5px;
-		cursor: pointer;
-		font-size: 16px;
-		width: 100%;
-		transition: background-color 0.3s ease;
-	}
+  form p {
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
 
-	form input[type="submit"]:hover {
-		background-color: #45a049;
-	}
+  input[type="submit"] {
+    background: linear-gradient(to right, #8e2de2, #4a00e0);
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    width: 100%;
+    font-weight: bold;
+  }
 
-	form p {
-		font-size: 16px;
-		color: #333;
-	}
+  input[type="submit"]:hover {
+    background: linear-gradient(to right, #4a00e0, #8e2de2);
+  }
+
+  @media screen and (max-width: 500px) {
+    h1 {
+      font-size: 2rem;
+    }
+
+    form {
+      padding: 25px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+  }
 </style>
+
+<h1>WELCOME! Please enter student details</h1>
 
 <a href="{% url 'firstpage' %}" class="btn">Back to Home</a>
 
 <form action="{% url 'detail' %}" method="post">
-	{% csrf_token %}
-	{{ form.as_p }}
-	<input type="submit" value="Submit">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Submit">
 </form>
 
 {% endblock %}
